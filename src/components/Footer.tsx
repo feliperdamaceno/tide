@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="font-medium text-sm text-center py-6 border-t-2 border-zinc-900 mx-4">
+    <footer className="py-6 mx-4 text-sm font-medium text-center border-t-2 border-zinc-900">
       <p className="">
         Tide © {new Date().getFullYear()}{' '}
         <a
