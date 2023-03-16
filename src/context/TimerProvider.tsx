@@ -15,7 +15,7 @@ export enum Modes {
 
 enum ModeTimes {
   FOCUS = minutesToMilliseconds(25),
-  SHORT = minutesToMilliseconds(5),
+  SHORT = minutesToMilliseconds(0.05),
   LONG = minutesToMilliseconds(15)
 }
 
@@ -66,11 +66,47 @@ interface TimerProviderProps {
 export default function TimerProvider({ children }: TimerProviderProps) {
   const [timer, dispatch] = useReducer(reducer, initialSettings)
 
+  // TODO: Add keyboard shortcuts!
+  // TODO: Add notification system!
+  // TODO: PWA implementation!
+
+  function createNotification() {
+    const settings = {
+      body: '',
+      vibrate: [200, 100, 200]
+    }
+
+    switch (timer.mode) {
+      case Modes.FOCUS:
+        settings.body = "Let's rest a little!"
+        return new Notification('Your focus time has finished!', settings)
+      case Modes.SHORT:
+        settings.body = 'Keeg going!'
+        return new Notification('Short break finished!', settings)
+      case Modes.LONG:
+        settings.body = "Let's start focusing!"
+        return new Notification('Long break finished!', settings)
+    }
+  }
+
+  function pushNotification() {
+    if (Notification.permission === 'granted') {
+      createNotification()
+    }
+  }
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      Notification.requestPermission()
+    }
+  }, [])
+
   useEffect(() => {
     const interval = setInterval(() => {
       clearInterval(interval)
 
       if (timer.time <= 0) {
+        pushNotification()
         dispatch({ type: 'STOP' })
         return
       }
