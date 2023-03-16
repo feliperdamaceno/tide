@@ -1,3 +1,6 @@
+// Helpers
+import minutesToMilliseconds from '../helpers/minutesToMilliseconds'
+
 // Hooks
 import { createContext, useReducer, useEffect, ReactNode } from 'react'
 
@@ -11,9 +14,9 @@ export enum Modes {
 }
 
 enum ModeTimes {
-  FOCUS = 60,
-  SHORT = 30,
-  LONG = 45
+  FOCUS = minutesToMilliseconds(25),
+  SHORT = minutesToMilliseconds(5),
+  LONG = minutesToMilliseconds(15)
 }
 
 const initialSettings = {
@@ -48,7 +51,7 @@ function reducer(state: TimerState, action: TimerActions) {
         mode: action.payload.mode
       }
     case 'TICK':
-      return { ...state, time: state.time - 1 }
+      return { ...state, time: state.time - 1000 }
     case 'INTERVAL':
       return { ...state, interval: action.payload.interval }
     default:
