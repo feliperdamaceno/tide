@@ -66,10 +66,6 @@ interface TimerProviderProps {
 export default function TimerProvider({ children }: TimerProviderProps) {
   const [timer, dispatch] = useReducer(reducer, initialSettings)
 
-  // TODO: Add keyboard shortcuts!
-  // TODO: Add notification system!
-  // TODO: PWA implementation!
-
   function createNotification() {
     const settings = {
       body: '',
@@ -106,8 +102,9 @@ export default function TimerProvider({ children }: TimerProviderProps) {
       clearInterval(interval)
 
       if (timer.time <= 0) {
-        pushNotification()
         dispatch({ type: 'STOP' })
+        dispatch({ type: 'RESET' })
+        pushNotification()
         return
       }
 

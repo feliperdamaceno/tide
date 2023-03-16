@@ -1,7 +1,7 @@
 export type TimerState = {
   time: number
   running: boolean
-  interval: number | null
+  interval: NodeJS.Timer | null
   mode: ModeTypes
 }
 
@@ -11,7 +11,7 @@ export type TimerActions =
   | { type: 'RESET' }
   | { type: 'MODE'; payload: { mode: ModeTypes } }
   | { type: 'TICK' }
-  | { type: 'INTERVAL'; payload: { interval: number | null } }
+  | { type: 'INTERVAL'; payload: { interval: NodeJS.Timer | null } }
 
 export type TimerContextType = {
   timer: TimerState
