@@ -1,6 +1,9 @@
 // Components
-import Navbar from './Navbar'
+import Header from './Header'
 import Footer from './Footer'
+
+// Context
+import TimerProvider from '../context/TimerProvider'
 
 // Types
 import { ReactNode } from 'react'
@@ -11,10 +14,10 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <>
-      <Navbar />
+    <TimerProvider>
+      <Header />
       {children}
       <Footer />
-    </>
+    </TimerProvider>
   )
 }

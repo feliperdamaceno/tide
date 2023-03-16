@@ -7,7 +7,7 @@ import { BsKeyboard as InfoIcon } from 'react-icons/bs'
 // Hooks
 import { useState } from 'react'
 
-export default function Navbar() {
+export default function Header() {
   const [isOpen, toggleIsOpen] = useState(false)
 
   return (
