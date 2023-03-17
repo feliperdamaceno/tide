@@ -13,17 +13,17 @@ import { useContext } from 'react'
 export default function TimerControls() {
   const { timer, dispatch } = useContext(TimerContext)
 
-  function handleStart() {
+  function handleStart(): void {
     dispatch({ type: 'START' })
     clickSound()
   }
 
-  function handlePause() {
+  function handlePause(): void {
     dispatch({ type: 'PAUSE' })
     clickSound()
   }
 
-  function handleReset() {
+  function handleReset(): void {
     dispatch({ type: 'RESET' })
     clickSound()
   }

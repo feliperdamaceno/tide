@@ -1,5 +1,6 @@
 // Helpers
 import minutesToMilliseconds from '../helpers/minutesToMilliseconds'
+import clickSound from '../helpers/clickSound'
 
 // Hooks
 import { createContext, useReducer, useEffect, ReactNode } from 'react'
@@ -67,7 +68,26 @@ interface TimerProviderProps {
 export default function TimerProvider({ children }: TimerProviderProps) {
   const [timer, dispatch] = useReducer(reducer, initialSettings)
 
-  function createNotification() {
+  function shortcuts(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Escape':
+        return dispatch({ type: 'RESET' })
+      case ' ':
+        if (timer.running) return dispatch({ type: 'PAUSE' })
+        return dispatch({ type: 'START' })
+      case '1':
+        if (timer.mode !== Modes.FOCUS) clickSound()
+        return dispatch({ type: 'MODE', payload: { mode: Modes.FOCUS } })
+      case '2':
+        if (timer.mode !== Modes.SHORT) clickSound()
+        return dispatch({ type: 'MODE', payload: { mode: Modes.SHORT } })
+      case '3':
+        if (timer.mode !== Modes.LONG) clickSound()
+        return dispatch({ type: 'MODE', payload: { mode: Modes.LONG } })
+    }
+  }
+
+  function createNotification(): Notification {
     const settings = {
       body: '',
       icon: '/android-chrome-192x192.png'
@@ -83,10 +103,12 @@ export default function TimerProvider({ children }: TimerProviderProps) {
       case Modes.LONG:
         settings.body = "Let's start focusing!"
         return new Notification('Long break finished!', settings)
+      default:
+        return new Notification('Error')
     }
   }
 
-  function pushNotification() {
+  function pushNotification(): void {
     if (Notification.permission === 'granted') {
       createNotification()
     }
@@ -96,8 +118,8 @@ export default function TimerProvider({ children }: TimerProviderProps) {
     if ('Notification' in window) {
       Notification.requestPermission()
     }
-    // timer.sound.volume = 0.5
     timer.sound.preload = 'auto'
+    window.addEventListener('keyup', shortcuts)
   }, [])
 
   useEffect(() => {
