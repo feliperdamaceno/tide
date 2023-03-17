@@ -7,9 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      devOptions: {
-        enabled: true
-      },
       manifest: {
         name: 'Tide',
         short_name: 'Tide',
