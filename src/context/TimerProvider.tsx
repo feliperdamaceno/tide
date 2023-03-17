@@ -15,7 +15,7 @@ export enum Modes {
 
 enum ModeTimes {
   FOCUS = minutesToMilliseconds(25),
-  SHORT = minutesToMilliseconds(0.05),
+  SHORT = minutesToMilliseconds(5),
   LONG = minutesToMilliseconds(15)
 }
 
@@ -117,9 +117,9 @@ export default function TimerProvider({ children }: TimerProviderProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer.time === 0) {
-        pushNotification()
-        if (timer.sound) timer.sound.play()
+        if (timer.time) timer.sound.play()
         dispatch({ type: 'RESET' })
+        pushNotification()
         return
       }
 

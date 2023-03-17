@@ -15,7 +15,7 @@ export default function KeyboardTooltip({ showing }: KeyboardTooltipProps) {
     >
       <ul className="font-medium divide-y-2 divide-zinc-900">
         <li className="flex items-center justify-between gap-2 py-2">
-          <span>Play | Pause | Resume</span>
+          <span>Start | Pause | Resume</span>
           <Keycap keyname="Space" />
         </li>
         <li className="flex items-center justify-between gap-2 py-2">
