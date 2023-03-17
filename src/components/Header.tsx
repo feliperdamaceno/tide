@@ -8,19 +8,19 @@ import { BsKeyboard as InfoIcon } from 'react-icons/bs'
 import { useState } from 'react'
 
 export default function Header() {
-  const [isOpen, toggleIsOpen] = useState(false)
+  const [showing, toggleShowing] = useState(false)
 
   return (
     <header className="hidden p-4 ml-auto text-center md:block">
       <button
         className="text-3xl transition-opacity cursor-help opacity-60 hover:opacity-100"
-        onMouseOver={() => toggleIsOpen(true)}
-        onMouseLeave={() => toggleIsOpen(false)}
+        onMouseOver={() => toggleShowing(true)}
+        onMouseLeave={() => toggleShowing(false)}
       >
         <InfoIcon />
       </button>
 
-      <KeyboardTooltip isOpen={isOpen} />
+      <KeyboardTooltip showing={showing} />
     </header>
   )
 }

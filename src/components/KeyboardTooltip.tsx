@@ -2,16 +2,16 @@
 import Keycap from './Keycap'
 
 interface KeyboardTooltipProps {
-  isOpen: boolean
+  showing: boolean
 }
 
-export default function KeyboardTooltip({ isOpen }: KeyboardTooltipProps) {
-  const hoverEffect = isOpen ? 'visible opacity-100' : 'invisible opacity-0'
+export default function KeyboardTooltip({ showing }: KeyboardTooltipProps) {
+  const hoverEffect = showing ? 'visible opacity-100' : 'invisible opacity-0'
 
   return (
     <section
       className={`absolute z-50 w-full max-w-xs px-3 py-1 text-sm transition-all duration-200 border-2 rounded-md right-4 top-13 bg-zinc-100 border-zinc-900 ${hoverEffect}`}
-      aria-hidden={!isOpen}
+      aria-hidden={!showing}
     >
       <ul className="font-medium divide-y-2 divide-zinc-900">
         <li className="flex items-center justify-between gap-2 py-2">

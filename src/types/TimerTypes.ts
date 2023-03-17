@@ -1,7 +1,7 @@
 export type TimerState = {
   time: number
   running: boolean
-  interval: NodeJS.Timer | null
+  paused: boolean
   mode: ModeTypes
   sound: HTMLAudioElement
 }
@@ -10,9 +10,9 @@ export type TimerActions =
   | { type: 'START' }
   | { type: 'PAUSE' }
   | { type: 'RESET' }
-  | { type: 'MODE'; payload: { mode: ModeTypes } }
+  | { type: 'CHANGE_MODE'; payload: { mode: ModeTypes } }
   | { type: 'TICK' }
-  | { type: 'INTERVAL'; payload: { interval: NodeJS.Timer | null } }
+  | { type: 'TOGGLE_START_PAUSE' }
 
 export type TimerContextType = {
   timer: TimerState

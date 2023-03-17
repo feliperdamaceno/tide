@@ -1,9 +1,6 @@
 // Components
 import Button from './Button'
 
-// Helpers
-import clickSound from '../helpers/clickSound'
-
 // Context
 import { TimerContext } from '../context/TimerProvider'
 
@@ -15,17 +12,14 @@ export default function TimerControls() {
 
   function handleStart(): void {
     dispatch({ type: 'START' })
-    clickSound()
   }
 
   function handlePause(): void {
     dispatch({ type: 'PAUSE' })
-    clickSound()
   }
 
   function handleReset(): void {
     dispatch({ type: 'RESET' })
-    clickSound()
   }
 
   return (
@@ -35,10 +29,10 @@ export default function TimerControls() {
           <Button
             render={(styles) => (
               <button
-                onClick={handlePause}
-                className={`${styles} rounded-l-md hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
+                onClick={timer.paused ? handleStart : handlePause}
+                className={`${styles} rounded-l-md md:hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
               >
-                Pause
+                {timer.paused ? 'Resume' : 'Pause'}
               </button>
             )}
           />
@@ -47,7 +41,7 @@ export default function TimerControls() {
             render={(styles) => (
               <button
                 onClick={handleReset}
-                className={`${styles} rounded-r-md hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
+                className={`${styles} rounded-r-md md:hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
               >
                 Reset
               </button>
@@ -59,7 +53,7 @@ export default function TimerControls() {
           render={(styles) => (
             <button
               onClick={handleStart}
-              className={`${styles} rounded-md hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
+              className={`${styles} rounded-md md:hover:translate-y-[-0.3em] active:hover:-translate-y-0`}
             >
               Start Timer
             </button>

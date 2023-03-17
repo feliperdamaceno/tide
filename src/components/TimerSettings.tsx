@@ -3,7 +3,6 @@ import Button from './Button'
 
 // Helpers
 import timeFormatter from '../helpers/timeFormatter'
-import clickSound from '../helpers/clickSound'
 
 // Context
 import { TimerContext, Modes } from '../context/TimerProvider'
@@ -28,11 +27,12 @@ export default function TimerSettings() {
           key={index}
           render={(styles) => (
             <button
-              onClick={() => {
-                dispatch({ type: 'MODE', payload: { mode: button.mode } })
-                if (timer.mode === button.mode) return
-                clickSound()
-              }}
+              onClick={() =>
+                dispatch({
+                  type: 'CHANGE_MODE',
+                  payload: { mode: button.mode }
+                })
+              }
               className={`${styles} ${
                 button.mode === timer.mode ? 'active' : ''
               }`}

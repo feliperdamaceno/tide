@@ -1,6 +1,5 @@
 // Helpers
 import minutesToMilliseconds from '../helpers/minutesToMilliseconds'
-import clickSound from '../helpers/clickSound'
 
 // Hooks
 import { createContext, useReducer, useEffect, ReactNode } from 'react'
@@ -23,6 +22,7 @@ enum ModeTimes {
 const initialSettings = {
   time: ModeTimes[Modes.FOCUS],
   running: false,
+  paused: false,
   interval: null,
   mode: Modes.FOCUS,
   sound: new Audio('/bell.flac')
@@ -33,19 +33,19 @@ export const TimerContext = createContext<TimerContextType>(null!)
 function reducer(state: TimerState, action: TimerActions) {
   switch (action.type) {
     case 'START':
-      return { ...state, running: true }
+      return { ...state, running: true, paused: false }
     case 'PAUSE':
-      if (state.interval) clearInterval(state.interval)
-      return { ...state, running: false }
+      return { ...state, paused: true }
     case 'RESET':
-      if (state.interval) clearInterval(state.interval)
       return {
         ...state,
         running: false,
         time: ModeTimes[state.mode]
       }
-    case 'MODE':
-      if (state.interval) clearInterval(state.interval)
+    case 'TOGGLE_START_PAUSE':
+      if (state.paused) return { ...state, running: true, paused: false }
+      return { ...state, paused: true }
+    case 'CHANGE_MODE':
       return {
         ...state,
         running: false,
@@ -54,8 +54,6 @@ function reducer(state: TimerState, action: TimerActions) {
       }
     case 'TICK':
       return { ...state, time: state.time - 1000 }
-    case 'INTERVAL':
-      return { ...state, interval: action.payload.interval }
     default:
       return state
   }
@@ -73,21 +71,17 @@ export default function TimerProvider({ children }: TimerProviderProps) {
       case 'Escape':
         return dispatch({ type: 'RESET' })
       case ' ':
-        if (timer.running) return dispatch({ type: 'PAUSE' })
-        return dispatch({ type: 'START' })
+        return dispatch({ type: 'TOGGLE_START_PAUSE' })
       case '1':
-        if (timer.mode !== Modes.FOCUS) clickSound()
-        return dispatch({ type: 'MODE', payload: { mode: Modes.FOCUS } })
+        return dispatch({ type: 'CHANGE_MODE', payload: { mode: Modes.FOCUS } })
       case '2':
-        if (timer.mode !== Modes.SHORT) clickSound()
-        return dispatch({ type: 'MODE', payload: { mode: Modes.SHORT } })
+        return dispatch({ type: 'CHANGE_MODE', payload: { mode: Modes.SHORT } })
       case '3':
-        if (timer.mode !== Modes.LONG) clickSound()
-        return dispatch({ type: 'MODE', payload: { mode: Modes.LONG } })
+        return dispatch({ type: 'CHANGE_MODE', payload: { mode: Modes.LONG } })
     }
   }
 
-  function createNotification(): Notification {
+  function createNotification(): Notification | undefined {
     const settings = {
       body: '',
       icon: '/android-chrome-192x192.png'
@@ -101,10 +95,8 @@ export default function TimerProvider({ children }: TimerProviderProps) {
         settings.body = 'Keeg going!'
         return new Notification('Short break finished!', settings)
       case Modes.LONG:
-        settings.body = "Let's start focusing!"
+        settings.body = "Let's start focusing again!"
         return new Notification('Long break finished!', settings)
-      default:
-        return new Notification('Error')
     }
   }
 
@@ -119,25 +111,23 @@ export default function TimerProvider({ children }: TimerProviderProps) {
       Notification.requestPermission()
     }
     timer.sound.preload = 'auto'
-    window.addEventListener('keyup', shortcuts)
+    window.addEventListener('keydown', shortcuts)
   }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      clearInterval(interval)
-
-      if (timer.time <= 0) {
+      if (timer.time === 0) {
         pushNotification()
         if (timer.sound) timer.sound.play()
         dispatch({ type: 'RESET' })
         return
       }
 
-      if (timer.running) dispatch({ type: 'TICK' })
+      if (timer.running && !timer.paused) dispatch({ type: 'TICK' })
     }, 1000)
 
-    dispatch({ type: 'INTERVAL', payload: { interval } })
-  }, [timer.time, timer.running])
+    return () => clearInterval(interval)
+  }, [timer.time, timer.running, timer.paused])
 
   return (
     <TimerContext.Provider value={{ timer, dispatch }}>
