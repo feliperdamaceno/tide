@@ -23,7 +23,8 @@ const initialSettings = {
   time: ModeTimes[Modes.FOCUS],
   running: false,
   interval: null,
-  mode: Modes.FOCUS
+  mode: Modes.FOCUS,
+  sound: new Audio('/bell.flac')
 }
 
 export const TimerContext = createContext<TimerContextType>(null!)
@@ -32,7 +33,7 @@ function reducer(state: TimerState, action: TimerActions) {
   switch (action.type) {
     case 'START':
       return { ...state, running: true }
-    case 'STOP':
+    case 'PAUSE':
       if (state.interval) clearInterval(state.interval)
       return { ...state, running: false }
     case 'RESET':
@@ -69,7 +70,7 @@ export default function TimerProvider({ children }: TimerProviderProps) {
   function createNotification() {
     const settings = {
       body: '',
-      vibrate: [200, 100, 200]
+      icon: '/android-chrome-192x192.png'
     }
 
     switch (timer.mode) {
@@ -95,6 +96,8 @@ export default function TimerProvider({ children }: TimerProviderProps) {
     if ('Notification' in window) {
       Notification.requestPermission()
     }
+    // timer.sound.volume = 0.5
+    timer.sound.preload = 'auto'
   }, [])
 
   useEffect(() => {
@@ -102,9 +105,9 @@ export default function TimerProvider({ children }: TimerProviderProps) {
       clearInterval(interval)
 
       if (timer.time <= 0) {
-        dispatch({ type: 'STOP' })
-        dispatch({ type: 'RESET' })
         pushNotification()
+        if (timer.sound) timer.sound.play()
+        dispatch({ type: 'RESET' })
         return
       }
 

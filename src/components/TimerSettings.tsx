@@ -1,6 +1,10 @@
 // Components
 import Button from './Button'
 
+// Helpers
+import timeFormatter from '../helpers/timeFormatter'
+import clickSound from '../helpers/clickSound'
+
 // Context
 import { TimerContext, Modes } from '../context/TimerProvider'
 
@@ -14,6 +18,8 @@ export default function TimerSettings() {
     { name: 'Short Break', mode: Modes.SHORT },
     { name: 'Long Break', mode: Modes.LONG }
   ]
+  const title = buttons.filter((button) => button.mode === timer.mode)[0].name
+  document.title = `(${timeFormatter(timer.time)}) ${title}`
 
   return (
     <div className="flex text-sm font-medium border-none rounded-md md:text-lg bg-zinc-900 timer-settings">
@@ -22,9 +28,11 @@ export default function TimerSettings() {
           key={index}
           render={(styles) => (
             <button
-              onClick={() =>
+              onClick={() => {
                 dispatch({ type: 'MODE', payload: { mode: button.mode } })
-              }
+                if (timer.mode === button.mode) return
+                clickSound()
+              }}
               className={`${styles} ${
                 button.mode === timer.mode ? 'active' : ''
               }`}

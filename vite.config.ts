@@ -7,11 +7,12 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
       devOptions: {
         enabled: true
       },
       manifest: {
+        name: 'Tide',
+        short_name: 'Tide',
         theme_color: '#f4f4f5',
         background_color: '#f4f4f5',
         orientation: 'any',
@@ -26,8 +27,13 @@ export default defineConfig({
           {
             src: '/android-chrome-512x512.png',
             sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: '/maskable-icon.png',
+            sizes: '512x512',
             type: 'image/png',
-            pourpose: 'any maskable'
+            purpose: 'any maskable'
           }
         ]
       }

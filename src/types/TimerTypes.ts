@@ -3,11 +3,12 @@ export type TimerState = {
   running: boolean
   interval: NodeJS.Timer | null
   mode: ModeTypes
+  sound: HTMLAudioElement
 }
 
 export type TimerActions =
   | { type: 'START' }
-  | { type: 'STOP' }
+  | { type: 'PAUSE' }
   | { type: 'RESET' }
   | { type: 'MODE'; payload: { mode: ModeTypes } }
   | { type: 'TICK' }
