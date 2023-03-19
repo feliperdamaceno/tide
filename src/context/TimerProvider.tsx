@@ -117,7 +117,7 @@ export default function TimerProvider({ children }: TimerProviderProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (timer.time === 0) {
-        if (timer.time) timer.sound.play()
+        if (timer.sound) timer.sound.play()
         dispatch({ type: 'RESET' })
         pushNotification()
         return
