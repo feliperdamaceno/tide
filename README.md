@@ -25,9 +25,11 @@ Tide was inspired by the Pomodoro technique and built using React, TypeScript, T
 
 ## Licence
 
-This repository is released under the [**MIT License**](LICENSE).
+This is an open-source project and is available under the [**MIT License**](LICENSE). You are free to use, modify, and distribute the code in accordance with the terms of the license.
 
 ## Contributors
+
+Contributions are highly appreciated! If you encounter any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
 [feliperdamaceno](https://github.com/feliperdamaceno)
 
